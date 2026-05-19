@@ -1,0 +1,812 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --hijau:#0F6E56;--hijau2:#1D9E75;--hijau3:#E1F5EE;--hijau4:#085041;
+  --biru:#185FA5;--biru2:#E6F1FB;--biru3:#042C53;
+  --emas:#EF9F27;--emas2:#FAEEDA;--emas3:#854F0B;
+  --merah:#E24B4A;--merah2:#FCEBEB;
+  --abu:#888780;--abu2:#F1EFE8;--abu3:#2C2C2A;
+  --putih:#fff;--border:#D3D1C7;
+  --font:'Segoe UI',system-ui,sans-serif
+}
+body{font-family:var(--font);background:var(--abu2);color:var(--abu3);min-height:100vh;font-size:14px}
+
+.header{background:#0a3d2b;color:white}
+.header-top{display:flex;align-items:center;gap:14px;padding:12px 20px;border-bottom:1px solid rgba(255,255,255,0.12)}
+.logo-img{height:52px;width:auto;object-fit:contain}
+.logo-fallback{display:none;gap:10px;align-items:center}
+.logo-circle{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:11px;text-align:center;line-height:1.2;flex-shrink:0}
+.header-text h1{font-size:15px;font-weight:700;letter-spacing:0.2px;line-height:1.3}
+.header-text p{font-size:11px;opacity:0.7;margin-top:2px}
+.header-actions{margin-left:auto;flex-shrink:0}
+.btn{padding:7px 13px;border-radius:6px;border:none;cursor:pointer;font-size:12px;font-family:var(--font);font-weight:600;transition:all 0.15s}
+.btn-emas{background:var(--emas);color:#3d1f00}.btn-emas:hover{background:#BA7517;color:white}
+.btn-hijau{background:var(--hijau);color:white}.btn-hijau:hover{background:var(--hijau4)}
+.btn-outline{background:rgba(255,255,255,0.1);color:white;border:1px solid rgba(255,255,255,0.25)}.btn-outline:hover{background:rgba(255,255,255,0.2)}
+.btn-gray{background:white;color:var(--hijau);border:0.5px solid var(--hijau)}.btn-gray:hover{background:var(--hijau3)}
+.btn-red{background:var(--merah2);color:var(--merah);border:0.5px solid var(--merah)}.btn-red:hover{background:var(--merah);color:white}
+
+.header-nav{display:flex;gap:2px;padding:0 16px;background:#083526}
+.nav-btn{background:none;border:none;color:rgba(255,255,255,0.6);padding:9px 14px;cursor:pointer;font-size:12px;border-bottom:2px solid transparent;transition:all 0.2s;font-family:var(--font);font-weight:500}
+.nav-btn.active{color:var(--emas);border-bottom-color:var(--emas)}
+.nav-btn:hover:not(.active){color:white;background:rgba(255,255,255,0.06)}
+
+.main{padding:16px 20px;max-width:1300px;margin:0 auto}
+.page{display:none}.page.active{display:block}
+
+.stat-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:14px}
+.stat-card{background:var(--putih);border:0.5px solid var(--border);border-radius:10px;padding:12px 14px;position:relative;overflow:hidden}
+.stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;border-radius:2px 2px 0 0}
+.sc-hijau::before{background:var(--hijau2)}.sc-biru::before{background:var(--biru)}.sc-emas::before{background:var(--emas)}.sc-ungu::before{background:#7F77DD}
+.stat-label{font-size:10px;color:var(--abu);margin-bottom:4px;text-transform:uppercase;letter-spacing:0.5px;font-weight:700}
+.stat-num{font-size:24px;font-weight:700}
+.sc-hijau .stat-num{color:var(--hijau4)}.sc-biru .stat-num{color:var(--biru3)}.sc-emas .stat-num{color:var(--emas3)}.sc-ungu .stat-num{color:#3C3489}
+
+/* TERBAIK SECTION */
+.terbaik-wrap{background:var(--putih);border:0.5px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:14px}
+.terbaik-head{background:#0a3d2b;padding:14px 18px;display:flex;justify-content:space-between;align-items:center}
+.terbaik-head-left h3{font-size:14px;font-weight:700;color:var(--emas);margin-bottom:2px}
+.terbaik-head-left p{font-size:11px;color:rgba(255,255,255,0.55)}
+.bulan-sel{display:flex;gap:6px;align-items:center}
+.bulan-sel select{padding:5px 8px;border:0.5px solid rgba(255,255,255,0.25);border-radius:5px;background:rgba(255,255,255,0.1);color:white;font-size:11px;font-family:var(--font);outline:none;cursor:pointer}
+.bulan-sel select option{background:#083526;color:white}
+
+.podium-area{padding:20px 24px 16px;display:flex;justify-content:center;align-items:flex-end;gap:16px;min-height:220px}
+.podium-col{display:flex;flex-direction:column;align-items:center;gap:0}
+.podium-col.rank-1{order:2}
+.podium-col.rank-2{order:1}
+.podium-col.rank-3{order:3}
+
+.relawan-avatar-wrap{position:relative;margin-bottom:8px}
+.relawan-foto{width:72px;height:72px;border-radius:50%;object-fit:cover;display:block;border:3px solid}
+.relawan-foto.gold{border-color:#EF9F27}
+.relawan-foto.silver{border-color:#B4B2A9}
+.relawan-foto.bronze{border-color:#D85A30}
+.relawan-init{width:72px;height:72px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:22px;border:3px solid}
+.relawan-init.gold{border-color:#EF9F27;background:#FAEEDA;color:#633806}
+.relawan-init.silver{border-color:#B4B2A9;background:#F1EFE8;color:#444441}
+.relawan-init.bronze{border-color:#D85A30;background:#FAECE7;color:#712B13}
+.rank-1 .relawan-foto,.rank-1 .relawan-init{width:86px;height:86px;font-size:26px}
+
+.medali-badge{position:absolute;bottom:-2px;right:-2px;width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;border:2px solid white}
+.mb-gold{background:#EF9F27}.mb-silver{background:#B4B2A9}.mb-bronze{background:#D85A30}
+
+.podium-info{text-align:center;margin-bottom:8px}
+.podium-nama{font-size:12px;font-weight:700;color:var(--abu3);max-width:110px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.podium-sub{font-size:10px;color:var(--abu);margin-top:2px}
+.podium-divisi{font-size:10px;color:var(--hijau4);font-weight:600;margin-top:1px}
+
+.podium-base{border-radius:8px 8px 0 0;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:white;width:100px}
+.pb-gold{background:#EF9F27;color:#3d1f00;height:70px}
+.pb-silver{background:#B4B2A9;color:#2C2C2A;height:50px}
+.pb-bronze{background:#D85A30;height:35px}
+
+.podium-label{font-size:11px;font-weight:700;margin-bottom:2px}
+.podium-empty-area{padding:24px;text-align:center;color:var(--abu);font-size:13px;min-height:160px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px}
+.podium-empty-area .ico{font-size:32px}
+
+.dash-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+.dash-grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+.card{background:var(--putih);border:0.5px solid var(--border);border-radius:10px;padding:14px 16px}
+.card-title{font-size:13px;font-weight:700;color:var(--abu3);margin-bottom:10px;padding-bottom:8px;border-bottom:0.5px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.div-row{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:0.5px solid var(--border);font-size:12px}
+.div-row:last-child{border-bottom:none}
+.div-count{font-weight:700;color:var(--hijau4)}
+
+.filter-bar{background:var(--putih);border:0.5px solid var(--border);border-radius:10px;padding:11px 14px;margin-bottom:11px;display:flex;gap:7px;flex-wrap:wrap;align-items:center}
+.filter-bar select,.filter-bar input{padding:6px 8px;border:0.5px solid var(--border);border-radius:6px;font-size:12px;font-family:var(--font);background:var(--abu2);color:var(--abu3);outline:none}
+.filter-bar input{flex:1;min-width:140px}
+.filter-bar select:focus,.filter-bar input:focus{border-color:var(--hijau2);background:white}
+
+.sppg-tabs{display:flex;gap:6px;margin-bottom:11px}
+.sppg-tab{padding:5px 13px;border-radius:20px;border:0.5px solid var(--border);background:white;font-size:12px;cursor:pointer;transition:all 0.2s;font-family:var(--font);font-weight:500}
+.st-semua{background:#083526;color:white;border-color:#083526}
+.st-mayang{background:var(--biru);color:white;border-color:var(--biru)}
+.st-kenali{background:var(--hijau);color:white;border-color:var(--hijau)}
+.st-kebun{background:var(--emas3);color:white;border-color:var(--emas3)}
+.sppg-tab:hover:not([class*="st-"]){background:var(--abu2)}
+
+.table-wrap{background:var(--putih);border:0.5px solid var(--border);border-radius:10px;overflow:hidden}
+table{width:100%;border-collapse:collapse;font-size:12px;table-layout:fixed}
+th{background:#083526;color:white;padding:8px 9px;text-align:left;font-weight:600;font-size:11px}
+td{padding:8px 9px;border-bottom:0.5px solid var(--border);vertical-align:middle;overflow:hidden;text-overflow:ellipsis}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:var(--hijau3)}
+.badge{display:inline-block;padding:2px 7px;border-radius:20px;font-size:10px;font-weight:700}
+.b-mayang{background:#E6F1FB;color:#0C447C}.b-kenali{background:var(--hijau3);color:var(--hijau4)}.b-kebun{background:var(--emas2);color:var(--emas3)}
+.b-div{background:var(--abu2);color:#444441}.b-lk{background:#E6F1FB;color:#0C447C}.b-pr{background:#FBEAF0;color:#72243E}
+.b-single{background:#F1EFE8;color:#5F5E5A}.b-nikah{background:#EAF3DE;color:#27500A}
+.foto-thumb{width:30px;height:30px;border-radius:50%;object-fit:cover;border:1.5px solid var(--border)}
+.foto-init{width:30px;height:30px;border-radius:50%;background:var(--hijau3);color:var(--hijau4);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:10px}
+.act-btns{display:flex;gap:3px}
+.ibtn{width:25px;height:25px;border-radius:5px;border:0.5px solid var(--border);background:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:12px;transition:all 0.15s}
+.ibtn:hover{background:var(--hijau3);border-color:var(--hijau2)}
+.ibtn.del:hover{background:var(--merah2);border-color:var(--merah)}
+
+.pager{display:flex;gap:4px;justify-content:center;margin-top:11px;align-items:center;font-size:12px;color:var(--abu)}
+.pb{width:27px;height:27px;border:0.5px solid var(--border);background:white;border-radius:5px;cursor:pointer;font-size:12px;font-family:var(--font)}
+.pb.active{background:var(--hijau);color:white;border-color:var(--hijau)}
+.pb:hover:not(.active){background:var(--hijau3)}
+
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:1000;align-items:flex-start;justify-content:center;padding-top:16px;overflow-y:auto}
+.modal-overlay.open{display:flex}
+.modal{background:white;border-radius:12px;padding:20px;width:580px;max-width:96vw;margin-bottom:20px}
+.modal-sm{width:500px}
+.modal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;padding-bottom:11px;border-bottom:0.5px solid var(--border)}
+.modal-header h3{font-size:14px;font-weight:700;color:var(--hijau4)}
+.modal-close{background:none;border:none;font-size:22px;cursor:pointer;color:var(--abu);line-height:1}
+.form-grid{display:grid;gap:11px}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.form-row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:9px}
+.form-group{display:flex;flex-direction:column;gap:4px}
+.form-group label{font-size:10px;font-weight:700;color:var(--abu);text-transform:uppercase;letter-spacing:0.5px}
+.form-group input,.form-group select,.form-group textarea{padding:7px 9px;border:0.5px solid var(--border);border-radius:6px;font-size:12px;font-family:var(--font);outline:none;background:var(--abu2);color:var(--abu3);transition:border 0.15s}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--hijau2);background:white}
+.form-group textarea{resize:vertical;min-height:58px}
+.req{color:var(--merah)}
+.foto-area{border:1.5px dashed var(--hijau2);border-radius:8px;padding:14px;text-align:center;background:var(--hijau3);cursor:pointer;transition:all 0.2s}
+.foto-area:hover{background:#9FE1CB}
+.foto-area p{font-size:12px;color:var(--hijau4);margin-top:4px}
+.foto-area small{font-size:10px;color:var(--abu);display:block;margin-top:2px}
+.prev-foto{width:64px;height:64px;border-radius:50%;object-fit:cover;margin:0 auto 5px;display:block;border:2px solid var(--hijau)}
+.gdrive-row{display:flex;align-items:center;gap:7px;padding:7px 9px;background:var(--emas2);border:0.5px solid var(--emas);border-radius:6px}
+.gdrive-row input{flex:1;border:none;background:transparent;font-size:11px;outline:none;color:#633806}
+.form-actions{display:flex;gap:8px;justify-content:flex-end;padding-top:12px;border-top:0.5px solid var(--border)}
+
+.nom-list{display:grid;gap:7px;max-height:280px;overflow-y:auto}
+.nom-item{display:flex;align-items:center;gap:9px;padding:9px;border:0.5px solid var(--border);border-radius:8px;cursor:pointer;transition:all 0.15s}
+.nom-item:hover{background:var(--hijau3);border-color:var(--hijau2)}
+.nom-item.sel{background:var(--hijau3);border-color:var(--hijau);border-width:1.5px}
+.nom-foto{width:34px;height:34px;border-radius:50%;object-fit:cover;border:1.5px solid var(--border);flex-shrink:0}
+.nom-init{width:34px;height:34px;border-radius:50%;background:var(--hijau3);color:var(--hijau4);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex-shrink:0}
+.nom-info{flex:1}
+.nom-nama{font-size:12px;font-weight:700;color:var(--abu3)}
+.nom-sub{font-size:10px;color:var(--abu);margin-top:1px}
+.rank-badge{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0}
+.rb1{background:#EF9F27;color:#3d1f00}.rb2{background:#B4B2A9;color:#2C2C2A}.rb3{background:#D85A30;color:white}
+
+.info-box{background:var(--emas2);border:0.5px solid var(--emas);border-radius:7px;padding:9px 12px;font-size:11px;color:var(--emas3);line-height:1.5}
+.panduan-step{background:var(--hijau3);border-radius:8px;padding:12px;margin-bottom:9px}
+.panduan-step strong{color:var(--hijau4);font-size:12px}
+.panduan-step p{font-size:12px;color:var(--abu3);margin-top:3px;line-height:1.6}
+code{background:white;padding:2px 5px;border-radius:3px;font-size:11px}
+
+.toast{position:fixed;bottom:18px;right:18px;background:var(--hijau4);color:white;padding:10px 15px;border-radius:8px;font-size:12px;font-weight:600;z-index:2000;transform:translateY(80px);transition:transform 0.3s}
+.toast.show{transform:translateY(0)}
+.toast.err{background:var(--merah)}
+.empty-state{text-align:center;padding:32px 20px;color:var(--abu)}
+.empty-state .ico{font-size:32px;margin-bottom:8px}
+</style>
+
+<div class="header">
+  <div class="header-top">
+    <div style="flex-shrink:0">
+      <img src="/mnt/user-data/uploads/logo.png" class="logo-img" alt="Logo BGN & Yayasan Hussa Rasyada Aryani"
+        onerror="this.style.display='none';document.getElementById('logo-fb').style.display='flex'">
+      <div id="logo-fb" class="logo-fallback">
+        <div class="logo-circle" style="background:var(--emas);color:#3d1f00">BGN</div>
+        <div style="width:1px;height:40px;background:rgba(255,255,255,0.2)"></div>
+        <div class="logo-circle" style="background:var(--hijau2);color:white">YHRA</div>
+      </div>
+    </div>
+    <div class="header-text">
+      <h1>Database Relawan SPPG</h1>
+      <p>Yayasan Hussa Rasyada Aryani · Di bawah naungan Badan Gizi Nasional Republik Indonesia</p>
+    </div>
+    <div class="header-actions">
+      <button class="btn btn-emas" onclick="bukaFormTambah()">+ Tambah Relawan</button>
+    </div>
+  </div>
+  <div class="header-nav">
+    <button class="nav-btn active" onclick="gotoPage('dashboard',this)">Dashboard</button>
+    <button class="nav-btn" onclick="gotoPage('data',this)">Data Relawan</button>
+    <button class="nav-btn" onclick="gotoPage('laporan',this)">Laporan & Rekap</button>
+    <button class="nav-btn" onclick="gotoPage('panduan',this)">Panduan Hosting</button>
+  </div>
+</div>
+
+<div class="main">
+
+<!-- DASHBOARD -->
+<div class="page active" id="page-dashboard">
+  <div class="stat-grid">
+    <div class="stat-card sc-hijau"><div class="stat-label">Total Relawan</div><div class="stat-num" id="st-total">0</div></div>
+    <div class="stat-card sc-biru"><div class="stat-label">Mayang Mangurai</div><div class="stat-num" id="st-mayang">0</div></div>
+    <div class="stat-card sc-hijau"><div class="stat-label">Kenali Besar</div><div class="stat-num" id="st-kenali">0</div></div>
+    <div class="stat-card sc-emas"><div class="stat-label">Kebun Handil</div><div class="stat-num" id="st-kebun">0</div></div>
+    <div class="stat-card sc-ungu"><div class="stat-label">Divisi Aktif</div><div class="stat-num">9</div></div>
+  </div>
+
+  <div class="terbaik-wrap">
+    <div class="terbaik-head">
+      <div class="terbaik-head-left">
+        <h3>🏆 Relawan Terbaik Bulan Ini</h3>
+        <p id="label-bulan">Pilih bulan & tahun untuk melihat nominasi</p>
+      </div>
+      <div class="bulan-sel">
+        <select id="sel-bln" onchange="updateTerbaik()">
+          <option value="">— Bulan —</option>
+          <option>Januari</option><option>Februari</option><option>Maret</option><option>April</option>
+          <option>Mei</option><option>Juni</option><option>Juli</option><option>Agustus</option>
+          <option>September</option><option>Oktober</option><option>November</option><option>Desember</option>
+        </select>
+        <select id="sel-thn" onchange="updateTerbaik()">
+          <option>2025</option><option selected>2026</option><option>2027</option>
+        </select>
+        <button class="btn btn-outline" style="font-size:11px;padding:5px 10px" onclick="bukaModalTerbaik()">✏️ Input Nominasi</button>
+      </div>
+    </div>
+    <div id="podium-area"></div>
+  </div>
+
+  <div class="dash-grid">
+    <div class="card">
+      <div class="card-title">Rekap per Divisi</div>
+      <div id="rekap-div"></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Relawan Terbaru <span style="font-size:10px;color:var(--abu);font-weight:400">5 terakhir</span></div>
+      <div id="relawan-terbaru"></div>
+    </div>
+  </div>
+  <div class="dash-grid3">
+    <div class="card">
+      <div class="card-title">Jenis Kelamin</div>
+      <div id="rekap-jk"></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Status Pernikahan</div>
+      <div id="rekap-status"></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Riwayat Terbaik</div>
+      <div id="rekap-hist"></div>
+    </div>
+  </div>
+</div>
+
+<!-- DATA RELAWAN -->
+<div class="page" id="page-data">
+  <div class="sppg-tabs">
+    <button class="sppg-tab st-semua" onclick="setFSppg('semua',this)">Semua SPPG</button>
+    <button class="sppg-tab" onclick="setFSppg('Mayang Mangurai',this)">Mayang Mangurai</button>
+    <button class="sppg-tab" onclick="setFSppg('Kenali Besar',this)">Kenali Besar</button>
+    <button class="sppg-tab" onclick="setFSppg('Kebun Handil',this)">Kebun Handil</button>
+  </div>
+  <div class="filter-bar">
+    <input type="text" id="cari" placeholder="Cari nama / NIK..." onkeyup="renderTabel()">
+    <select id="ff-sppg" onchange="renderTabel()">
+      <option value="">Semua SPPG</option>
+      <option>Mayang Mangurai</option><option>Kenali Besar</option><option>Kebun Handil</option>
+    </select>
+    <select id="ff-div" onchange="renderTabel()">
+      <option value="">Semua Divisi</option>
+      <option>Persiapan</option><option>Pengolahan</option><option>Pemorsian</option>
+      <option>Pencucian Omprengan</option><option>Distribusi</option>
+      <option>Petugas Kebersihan</option><option>Satpam</option>
+      <option>Asisten Lapangan 1</option><option>Asisten Lapangan 2</option>
+    </select>
+    <select id="ff-jk" onchange="renderTabel()">
+      <option value="">Semua JK</option><option>Laki-laki</option><option>Perempuan</option>
+    </select>
+    <select id="ff-status" onchange="renderTabel()">
+      <option value="">Semua Status</option><option>Single</option><option>Menikah</option>
+    </select>
+    <button class="btn btn-hijau" onclick="bukaFormTambah()">+ Tambah</button>
+    <button class="btn btn-gray" onclick="exportCSV()">⬇ CSV</button>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th style="width:38px">Foto</th>
+          <th style="width:150px">Nama Lengkap</th>
+          <th style="width:128px">NIK</th>
+          <th style="width:120px">Tgl Lahir</th>
+          <th style="width:48px">JK</th>
+          <th style="width:60px">Status</th>
+          <th style="width:95px">SPPG</th>
+          <th style="width:130px">Divisi</th>
+          <th style="width:120px">Alamat</th>
+          <th style="width:68px">Aksi</th>
+        </tr>
+      </thead>
+      <tbody id="tbody"></tbody>
+    </table>
+  </div>
+  <div class="pager" id="pager"></div>
+</div>
+
+<!-- LAPORAN -->
+<div class="page" id="page-laporan">
+  <div class="dash-grid">
+    <div class="card">
+      <div class="card-title">Jumlah per SPPG</div>
+      <div class="div-row"><span>SPPG Mayang Mangurai</span><span class="div-count" id="l-mayang">0</span></div>
+      <div class="div-row"><span>SPPG Kenali Besar</span><span class="div-count" id="l-kenali">0</span></div>
+      <div class="div-row"><span>SPPG Kebun Handil</span><span class="div-count" id="l-kebun">0</span></div>
+      <div class="div-row" style="font-weight:700"><span>Total</span><span class="div-count" id="l-total">0</span></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Jumlah per Divisi</div>
+      <div id="l-divisi"></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Jenis Kelamin</div>
+      <div class="div-row"><span>Laki-laki</span><span class="div-count" id="l-lk">0</span></div>
+      <div class="div-row"><span>Perempuan</span><span class="div-count" id="l-pr">0</span></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Status Pernikahan</div>
+      <div class="div-row"><span>Single</span><span class="div-count" id="l-single">0</span></div>
+      <div class="div-row"><span>Menikah</span><span class="div-count" id="l-nikah">0</span></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">Rekap Divisi per SPPG</div>
+    <div id="l-per-sppg"></div>
+  </div>
+</div>
+
+<!-- PANDUAN -->
+<div class="page" id="page-panduan">
+  <div class="card">
+    <div class="card-title">Panduan Deploy ke GitHub Pages (Hosting Gratis)</div>
+    <div style="margin-top:10px">
+      <div class="panduan-step"><strong>Langkah 1 — Buat Akun GitHub</strong><p>Daftar di <a href="https://github.com" target="_blank" style="color:var(--hijau4)">github.com</a> jika belum punya akun. Gratis sepenuhnya.</p></div>
+      <div class="panduan-step"><strong>Langkah 2 — Buat Repository Baru</strong><p>Klik "New" → nama repo: <code>database-sppg-hussa</code> → pilih Public → Create Repository.</p></div>
+      <div class="panduan-step"><strong>Langkah 3 — Upload File HTML</strong><p>Simpan sistem ini sebagai <code>index.html</code> → klik "Add file" → "Upload files" di repository GitHub.</p></div>
+      <div class="panduan-step"><strong>Langkah 4 — Aktifkan GitHub Pages</strong><p>Settings repository → "Pages" → Source: Branch main, /(root) → Save → Akses di: <code>https://[username].github.io/database-sppg-hussa</code></p></div>
+      <div style="background:var(--emas2);border:0.5px solid var(--emas);border-radius:8px;padding:12px;margin-bottom:9px">
+        <strong style="color:var(--emas3);font-size:12px">📸 Integrasi Google Drive untuk Pas Foto</strong>
+        <p style="font-size:12px;color:var(--abu3);margin-top:4px;line-height:1.6">1. Upload foto ke Google Drive → klik kanan → Bagikan → "Siapa saja yang punya link"<br>2. Salin link → paste di field "Link Google Drive" saat input relawan<br>3. Foto otomatis muncul di dashboard, tabel, dan podium relawan terbaik</p>
+      </div>
+      <div style="background:var(--merah2);border:0.5px solid var(--merah);border-radius:8px;padding:12px">
+        <strong style="color:var(--merah);font-size:12px">⚠️ Catatan Penting</strong>
+        <p style="font-size:12px;color:var(--abu3);margin-top:4px;line-height:1.6">Data tersimpan di browser (localStorage). Untuk database permanen multi-perangkat, hubungi pengembang untuk upgrade menggunakan Google Sheets API atau Supabase.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<!-- MODAL FORM RELAWAN -->
+<div class="modal-overlay" id="modal-form">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 id="modal-judul">Tambah Relawan Baru</h3>
+      <button class="modal-close" onclick="closeModal('modal-form')">×</button>
+    </div>
+    <div class="form-grid">
+      <div class="form-row">
+        <div class="form-group"><label>Nama Lengkap (KTP) <span class="req">*</span></label><input type="text" id="f-nama" placeholder="Sesuai KTP"></div>
+        <div class="form-group"><label>NIK (16 digit) <span class="req">*</span></label><input type="text" id="f-nik" placeholder="16 digit" maxlength="16"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Tempat Lahir <span class="req">*</span></label><input type="text" id="f-tempat" placeholder="Kota/Kabupaten"></div>
+        <div class="form-group"><label>Tanggal Lahir <span class="req">*</span></label><input type="date" id="f-tgl"></div>
+      </div>
+      <div class="form-row3">
+        <div class="form-group"><label>Jenis Kelamin <span class="req">*</span></label>
+          <select id="f-jk"><option value="">— Pilih —</option><option>Laki-laki</option><option>Perempuan</option></select></div>
+        <div class="form-group"><label>Status <span class="req">*</span></label>
+          <select id="f-status"><option value="">— Pilih —</option><option>Single</option><option>Menikah</option></select></div>
+        <div class="form-group"><label>No. HP</label><input type="text" id="f-hp" placeholder="08xx-xxxx-xxxx"></div>
+      </div>
+      <div class="form-group"><label>Alamat Lengkap <span class="req">*</span></label><textarea id="f-alamat" placeholder="Jl. / RT / RW / Kel. / Kec. / Kota"></textarea></div>
+      <div class="form-row">
+        <div class="form-group"><label>SPPG <span class="req">*</span></label>
+          <select id="f-sppg"><option value="">— Pilih SPPG —</option><option>Mayang Mangurai</option><option>Kenali Besar</option><option>Kebun Handil</option></select></div>
+        <div class="form-group"><label>Divisi <span class="req">*</span></label>
+          <select id="f-divisi">
+            <option value="">— Pilih Divisi —</option>
+            <option>Persiapan</option><option>Pengolahan</option><option>Pemorsian</option>
+            <option>Pencucian Omprengan</option><option>Distribusi</option>
+            <option>Petugas Kebersihan</option><option>Satpam</option>
+            <option>Asisten Lapangan 1</option><option>Asisten Lapangan 2</option>
+          </select></div>
+      </div>
+      <div class="form-group">
+        <label>Pas Foto (upload dari perangkat)</label>
+        <div class="foto-area" onclick="document.getElementById('f-file').click()">
+          <img id="prev-foto" class="prev-foto" src="" style="display:none">
+          <div id="upload-ph"><div style="font-size:24px;color:var(--hijau2)">📷</div><p>Klik untuk pilih foto</p><small>JPG/PNG maks 2MB</small></div>
+        </div>
+        <input type="file" id="f-file" accept="image/*" style="display:none" onchange="previewFoto(this)">
+      </div>
+      <div class="form-group">
+        <label>Link Google Drive Foto (opsional)</label>
+        <div class="gdrive-row"><span>🔗</span><input type="text" id="f-gdrive" placeholder="https://drive.google.com/file/d/..."></div>
+        <small style="font-size:10px;color:var(--abu);margin-top:2px">Bagikan ke "Siapa saja yang punya link" sebelum paste</small>
+      </div>
+      <input type="hidden" id="f-id"><input type="hidden" id="f-foto64">
+      <div class="form-actions">
+        <button class="btn btn-gray" onclick="closeModal('modal-form')">Batal</button>
+        <button class="btn btn-hijau" onclick="simpanRelawan()">💾 Simpan Data</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL NOMINASI TERBAIK -->
+<div class="modal-overlay" id="modal-terbaik">
+  <div class="modal modal-sm">
+    <div class="modal-header">
+      <h3>🏆 Input Relawan Terbaik</h3>
+      <button class="modal-close" onclick="closeModal('modal-terbaik')">×</button>
+    </div>
+    <div class="form-grid">
+      <div class="form-row">
+        <div class="form-group"><label>Bulan <span class="req">*</span></label>
+          <select id="tb-bln"><option value="">— Bulan —</option>
+            <option>Januari</option><option>Februari</option><option>Maret</option><option>April</option>
+            <option>Mei</option><option>Juni</option><option>Juli</option><option>Agustus</option>
+            <option>September</option><option>Oktober</option><option>November</option><option>Desember</option>
+          </select></div>
+        <div class="form-group"><label>Tahun <span class="req">*</span></label>
+          <select id="tb-thn"><option>2025</option><option selected>2026</option><option>2027</option></select></div>
+      </div>
+      <div class="info-box">Pilih hingga <strong>3 relawan terbaik</strong>. Urutan pilih = Juara 1, 2, 3. Foto relawan akan tampil di podium dashboard.</div>
+      <div class="form-group"><input type="text" id="cari-nom" placeholder="Cari nama relawan..." onkeyup="renderNomList()"></div>
+      <div class="nom-list" id="nom-list"></div>
+      <div style="font-size:11px;color:var(--abu)">Dipilih: <span id="sel-count" style="font-weight:700;color:var(--hijau4)">0</span>/3 relawan</div>
+      <div class="form-actions">
+        <button class="btn btn-gray" onclick="closeModal('modal-terbaik')">Batal</button>
+        <button class="btn btn-hijau" onclick="simpanTerbaik()">🏆 Simpan Nominasi</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL DETAIL -->
+<div class="modal-overlay" id="modal-detail">
+  <div class="modal" style="width:420px">
+    <div class="modal-header">
+      <h3>Detail Relawan</h3>
+      <button class="modal-close" onclick="closeModal('modal-detail')">×</button>
+    </div>
+    <div id="detail-isi"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const DIVISI=['Persiapan','Pengolahan','Pemorsian','Pencucian Omprengan','Distribusi','Petugas Kebersihan','Satpam','Asisten Lapangan 1','Asisten Lapangan 2'];
+const SPPG_LIST=['Mayang Mangurai','Kenali Besar','Kebun Handil'];
+let data=JSON.parse(localStorage.getItem('sppg_v3')||'[]');
+let terbaik=JSON.parse(localStorage.getItem('sppg_tb3')||'{}');
+let fSppg='semua',curPage=1,PER=10,selNom=[];
+
+function sv(){localStorage.setItem('sppg_v3',JSON.stringify(data));localStorage.setItem('sppg_tb3',JSON.stringify(terbaik));}
+function toast(m,ok=true){const t=document.getElementById('toast');t.textContent=m;t.className='toast'+(ok?'':' err')+' show';setTimeout(()=>t.className='toast',2500);}
+function closeModal(id){document.getElementById(id).classList.remove('open');}
+
+function gotoPage(id,btn){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  btn.classList.add('active');
+  if(id==='dashboard')renderDash();
+  if(id==='data')renderTabel();
+  if(id==='laporan')renderLaporan();
+}
+
+function renderDash(){
+  document.getElementById('st-total').textContent=data.length;
+  document.getElementById('st-mayang').textContent=data.filter(x=>x.sppg==='Mayang Mangurai').length;
+  document.getElementById('st-kenali').textContent=data.filter(x=>x.sppg==='Kenali Besar').length;
+  document.getElementById('st-kebun').textContent=data.filter(x=>x.sppg==='Kebun Handil').length;
+  document.getElementById('rekap-div').innerHTML=DIVISI.map(d=>{
+    const n=data.filter(x=>x.divisi===d).length;
+    return`<div class="div-row"><span>${d}</span><span class="div-count">${n}</span></div>`;
+  }).join('');
+  const sorted=[...data].sort((a,b)=>new Date(b.tambah||0)-new Date(a.tambah||0)).slice(0,5);
+  document.getElementById('relawan-terbaru').innerHTML=sorted.length?sorted.map(r=>`<div class="div-row"><span>${r.nama}</span><span style="font-size:10px;color:var(--abu)">${r.sppg}</span></div>`).join(''):'<p style="font-size:12px;color:var(--abu)">Belum ada data</p>';
+  document.getElementById('rekap-jk').innerHTML=`<div class="div-row"><span>Laki-laki</span><span class="div-count">${data.filter(x=>x.jk==='Laki-laki').length}</span></div><div class="div-row"><span>Perempuan</span><span class="div-count">${data.filter(x=>x.jk==='Perempuan').length}</span></div>`;
+  document.getElementById('rekap-status').innerHTML=`<div class="div-row"><span>Single</span><span class="div-count">${data.filter(x=>x.status==='Single').length}</span></div><div class="div-row"><span>Menikah</span><span class="div-count">${data.filter(x=>x.status==='Menikah').length}</span></div>`;
+  const keys=Object.keys(terbaik).sort().reverse().slice(0,5);
+  document.getElementById('rekap-hist').innerHTML=keys.length?keys.map(k=>{
+    const ids=terbaik[k];const r=ids[0]?data.find(x=>x.id===ids[0]):null;
+    return`<div class="div-row"><span style="font-size:11px">${k}</span><span style="font-size:11px;font-weight:700;color:var(--hijau4)">🥇 ${r?r.nama:'—'}</span></div>`;
+  }).join(''):'<p style="font-size:12px;color:var(--abu)">Belum ada riwayat</p>';
+  updateTerbaik();
+}
+
+function updateTerbaik(){
+  const bln=document.getElementById('sel-bln').value;
+  const thn=document.getElementById('sel-thn').value;
+  const key=bln?`${bln} ${thn}`:'';
+  const label=document.getElementById('label-bulan');
+  const area=document.getElementById('podium-area');
+  if(!key||!terbaik[key]||!terbaik[key].length){
+    label.textContent=key?`Belum ada nominasi untuk ${key}`:'Pilih bulan & tahun untuk melihat nominasi';
+    area.innerHTML=`<div class="podium-empty-area"><div class="ico">🏆</div><p>Belum ada nominasi untuk periode ini</p><button class="btn btn-hijau" style="margin-top:8px;font-size:12px" onclick="bukaModalTerbaik()">✏️ Input Nominasi Sekarang</button></div>`;
+    return;
+  }
+  label.textContent=`Periode: ${key}`;
+  const ids=terbaik[key];
+  const configs=[
+    {rank:1,cls:'gold',medal:'🥇',label:'Juara 1',pbCls:'pb-gold',h:'70px'},
+    {rank:2,cls:'silver',medal:'🥈',label:'Juara 2',pbCls:'pb-silver',h:'50px'},
+    {rank:3,cls:'bronze',medal:'🥉',label:'Juara 3',pbCls:'pb-bronze',h:'35px'},
+  ];
+  const cols=ids.map((rid,i)=>{
+    const r=data.find(x=>x.id===rid);
+    if(!r)return'';
+    const cfg=configs[i];
+    let fotoEl;
+    if(r.foto){
+      fotoEl=`<img class="relawan-foto ${cfg.cls}" src="${r.foto}" onerror="this.style.display='none';this.nextSibling.style.display='flex'"><div class="relawan-init ${cfg.cls}" style="display:none">${r.nama[0]}</div>`;
+    } else {
+      fotoEl=`<div class="relawan-init ${cfg.cls}">${r.nama[0]}</div>`;
+    }
+    return`<div class="podium-col rank-${cfg.rank}">
+      <div class="relawan-avatar-wrap">
+        ${fotoEl}
+        <div class="medali-badge mb-${cfg.cls}">${cfg.medal}</div>
+      </div>
+      <div class="podium-info">
+        <div class="podium-nama">${r.nama}</div>
+        <div class="podium-sub">${r.sppg}</div>
+        <div class="podium-divisi">${r.divisi}</div>
+      </div>
+      <div class="podium-base ${cfg.pbCls}" style="height:${cfg.h}">${cfg.label}</div>
+    </div>`;
+  }).join('');
+  area.innerHTML=`<div class="podium-area">${cols}</div>`;
+}
+
+function bukaModalTerbaik(){
+  selNom=[];
+  document.getElementById('cari-nom').value='';
+  const bln=document.getElementById('sel-bln').value;
+  const thn=document.getElementById('sel-thn').value;
+  if(bln)document.getElementById('tb-bln').value=bln;
+  document.getElementById('tb-thn').value=thn||'2026';
+  const key=bln?`${bln} ${thn}`:'';
+  if(key&&terbaik[key])selNom=[...terbaik[key]];
+  renderNomList();
+  document.getElementById('modal-terbaik').classList.add('open');
+}
+
+function renderNomList(){
+  const cari=document.getElementById('cari-nom').value.toLowerCase();
+  const filtered=data.filter(r=>r.nama.toLowerCase().includes(cari));
+  document.getElementById('sel-count').textContent=selNom.length;
+  const el=document.getElementById('nom-list');
+  if(!filtered.length){el.innerHTML='<p style="font-size:12px;color:var(--abu);text-align:center;padding:12px">Tidak ada data</p>';return;}
+  el.innerHTML=filtered.map(r=>{
+    const idx=selNom.indexOf(r.id);
+    const isSel=idx>=0;
+    const fotoEl=r.foto?`<img class="nom-foto" src="${r.foto}" onerror="this.style.display='none';this.nextSibling.style.display='flex'"><div class="nom-init" style="display:none">${r.nama[0]}</div>`:`<div class="nom-init">${r.nama[0]}</div>`;
+    const rbCls=['rb1','rb2','rb3'];
+    const rankEl=isSel?`<div class="rank-badge ${rbCls[idx]}">${idx+1}</div>`:'<div style="width:22px"></div>';
+    return`<div class="nom-item${isSel?' sel':''}" onclick="toggleNom('${r.id}')">
+      ${fotoEl}
+      <div class="nom-info"><div class="nom-nama">${r.nama}</div><div class="nom-sub">${r.sppg} · ${r.divisi}</div></div>
+      ${rankEl}
+    </div>`;
+  }).join('');
+}
+
+function toggleNom(id){
+  const idx=selNom.indexOf(id);
+  if(idx>=0)selNom.splice(idx,1);
+  else if(selNom.length<3)selNom.push(id);
+  else{toast('Maksimal 3 relawan!',false);return;}
+  renderNomList();
+}
+
+function simpanTerbaik(){
+  const bln=document.getElementById('tb-bln').value;
+  const thn=document.getElementById('tb-thn').value;
+  if(!bln){toast('Pilih bulan terlebih dahulu!',false);return;}
+  if(!selNom.length){toast('Pilih minimal 1 relawan!',false);return;}
+  const key=`${bln} ${thn}`;
+  terbaik[key]=selNom;
+  sv();
+  document.getElementById('sel-bln').value=bln;
+  document.getElementById('sel-thn').value=thn;
+  closeModal('modal-terbaik');
+  toast(`🏆 Nominasi ${key} berhasil disimpan!`);
+  renderDash();
+}
+
+function bukaFormTambah(){
+  ['f-id','f-nama','f-nik','f-tempat','f-tgl','f-alamat','f-hp','f-gdrive','f-foto64'].forEach(i=>document.getElementById(i).value='');
+  ['f-jk','f-status','f-sppg','f-divisi'].forEach(i=>document.getElementById(i).value='');
+  document.getElementById('prev-foto').style.display='none';
+  document.getElementById('upload-ph').style.display='block';
+  document.getElementById('modal-judul').textContent='Tambah Relawan Baru';
+  document.getElementById('modal-form').classList.add('open');
+}
+
+function bukaEdit(id){
+  const r=data.find(x=>x.id===id);if(!r)return;
+  document.getElementById('f-id').value=r.id;
+  document.getElementById('f-nama').value=r.nama;
+  document.getElementById('f-nik').value=r.nik;
+  document.getElementById('f-tempat').value=r.ttlTempat||'';
+  document.getElementById('f-tgl').value=r.ttlTgl||'';
+  document.getElementById('f-jk').value=r.jk||'';
+  document.getElementById('f-status').value=r.status||'';
+  document.getElementById('f-hp').value=r.hp||'';
+  document.getElementById('f-alamat').value=r.alamat||'';
+  document.getElementById('f-sppg').value=r.sppg||'';
+  document.getElementById('f-divisi').value=r.divisi||'';
+  document.getElementById('f-gdrive').value=r.gdrive||'';
+  document.getElementById('f-foto64').value=r.foto||'';
+  if(r.foto){document.getElementById('prev-foto').src=r.foto;document.getElementById('prev-foto').style.display='block';document.getElementById('upload-ph').style.display='none';}
+  else{document.getElementById('prev-foto').style.display='none';document.getElementById('upload-ph').style.display='block';}
+  document.getElementById('modal-judul').textContent='Edit Data Relawan';
+  document.getElementById('modal-form').classList.add('open');
+}
+
+function simpanRelawan(){
+  const nama=document.getElementById('f-nama').value.trim();
+  const nik=document.getElementById('f-nik').value.trim();
+  const ttlTempat=document.getElementById('f-tempat').value.trim();
+  const ttlTgl=document.getElementById('f-tgl').value;
+  const jk=document.getElementById('f-jk').value;
+  const status=document.getElementById('f-status').value;
+  const hp=document.getElementById('f-hp').value.trim();
+  const alamat=document.getElementById('f-alamat').value.trim();
+  const sppg=document.getElementById('f-sppg').value;
+  const divisi=document.getElementById('f-divisi').value;
+  const gdrive=document.getElementById('f-gdrive').value.trim();
+  const foto=document.getElementById('f-foto64').value;
+  if(!nama||!nik||!ttlTempat||!ttlTgl||!jk||!status||!alamat||!sppg||!divisi){toast('Lengkapi semua field wajib!',false);return;}
+  if(nik.length!==16||!/^\d+$/.test(nik)){toast('NIK harus 16 digit angka!',false);return;}
+  const fotoSrc=foto||(gdrive?gdriveUrl(gdrive):'');
+  const fid=document.getElementById('f-id').value;
+  if(fid){
+    const idx=data.findIndex(x=>x.id===fid);
+    data[idx]={...data[idx],nama,nik,ttlTempat,ttlTgl,jk,status,hp,alamat,sppg,divisi,gdrive,foto:fotoSrc};
+    toast('Data berhasil diperbarui ✓');
+  } else {
+    data.push({id:Date.now().toString(),nama,nik,ttlTempat,ttlTgl,jk,status,hp,alamat,sppg,divisi,gdrive,foto:fotoSrc,tambah:new Date().toISOString()});
+    toast('Relawan berhasil ditambahkan ✓');
+  }
+  sv();closeModal('modal-form');renderTabel();renderDash();
+}
+
+function hapus(id){
+  if(!confirm('Yakin hapus data relawan ini?'))return;
+  data=data.filter(x=>x.id!==id);sv();renderTabel();renderDash();toast('Data dihapus');
+}
+
+function lihatDetail(id){
+  const r=data.find(x=>x.id===id);if(!r)return;
+  const tgl=r.ttlTgl?new Date(r.ttlTgl).toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric'}):'—';
+  const fotoEl=r.foto
+    ?`<img src="${r.foto}" style="width:86px;height:86px;border-radius:50%;object-fit:cover;margin:0 auto 10px;display:block;border:3px solid var(--hijau)">`
+    :`<div style="width:86px;height:86px;border-radius:50%;background:var(--hijau3);color:var(--hijau4);display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:700;margin:0 auto 10px">${r.nama[0]}</div>`;
+  document.getElementById('detail-isi').innerHTML=`
+    <div style="text-align:center;margin-bottom:14px">${fotoEl}
+      <p style="font-size:15px;font-weight:700">${r.nama}</p>
+      <p style="font-size:12px;color:var(--abu)">${r.sppg} · ${r.divisi}</p>
+    </div>
+    <div style="font-size:12px;display:grid;gap:8px">
+      <div class="div-row"><span style="color:var(--abu)">NIK</span><strong>${r.nik}</strong></div>
+      <div class="div-row"><span style="color:var(--abu)">Tempat / Tgl Lahir</span><strong>${r.ttlTempat}, ${tgl}</strong></div>
+      <div class="div-row"><span style="color:var(--abu)">Jenis Kelamin</span><strong>${r.jk||'—'}</strong></div>
+      <div class="div-row"><span style="color:var(--abu)">Status</span><strong>${r.status||'—'}</strong></div>
+      <div class="div-row"><span style="color:var(--abu)">No. HP</span><strong>${r.hp||'—'}</strong></div>
+      <div style="padding:5px 0;border-bottom:0.5px solid var(--border)"><span style="color:var(--abu)">Alamat</span><p style="margin-top:3px">${r.alamat}</p></div>
+      ${r.gdrive?`<div><span style="color:var(--abu)">Foto Drive</span><br><a href="${r.gdrive}" target="_blank" style="color:var(--hijau4);font-size:11px">Buka di Google Drive ↗</a></div>`:''}
+    </div>`;
+  document.getElementById('modal-detail').classList.add('open');
+}
+
+function gdriveUrl(link){const m=link.match(/\/d\/([^/]+)/);return m?`https://drive.google.com/thumbnail?id=${m[1]}&sz=w200`:'';}
+
+function previewFoto(input){
+  const file=input.files[0];if(!file)return;
+  if(file.size>2*1024*1024){toast('Foto maks 2MB!',false);return;}
+  const r=new FileReader();
+  r.onload=e=>{
+    document.getElementById('prev-foto').src=e.target.result;
+    document.getElementById('prev-foto').style.display='block';
+    document.getElementById('upload-ph').style.display='none';
+    document.getElementById('f-foto64').value=e.target.result;
+  };r.readAsDataURL(file);
+}
+
+function setFSppg(val,btn){
+  fSppg=val;curPage=1;
+  document.querySelectorAll('.sppg-tab').forEach(t=>{t.className='sppg-tab'});
+  const cls={'semua':'st-semua','Mayang Mangurai':'st-mayang','Kenali Besar':'st-kenali','Kebun Handil':'st-kebun'};
+  btn.className=`sppg-tab ${cls[val]}`;
+  renderTabel();
+}
+
+function getFiltered(){
+  let d=[...data];
+  if(fSppg!=='semua')d=d.filter(x=>x.sppg===fSppg);
+  const c=document.getElementById('cari')?.value.toLowerCase()||'';if(c)d=d.filter(x=>x.nama.toLowerCase().includes(c)||x.nik.includes(c));
+  const fs=document.getElementById('ff-sppg')?.value||'';if(fs)d=d.filter(x=>x.sppg===fs);
+  const fd=document.getElementById('ff-div')?.value||'';if(fd)d=d.filter(x=>x.divisi===fd);
+  const fj=document.getElementById('ff-jk')?.value||'';if(fj)d=d.filter(x=>x.jk===fj);
+  const ft=document.getElementById('ff-status')?.value||'';if(ft)d=d.filter(x=>x.status===ft);
+  return d;
+}
+
+function renderTabel(){
+  const filtered=getFiltered();
+  const totalPages=Math.max(1,Math.ceil(filtered.length/PER));
+  if(curPage>totalPages)curPage=1;
+  const slice=filtered.slice((curPage-1)*PER,curPage*PER);
+  const tbody=document.getElementById('tbody');if(!tbody)return;
+  const bc={'Mayang Mangurai':'b-mayang','Kenali Besar':'b-kenali','Kebun Handil':'b-kebun'};
+  if(!filtered.length){tbody.innerHTML=`<tr><td colspan="10"><div class="empty-state"><div class="ico">🔍</div><p>Tidak ada data ditemukan</p></div></td></tr>`;document.getElementById('pager').innerHTML='';return;}
+  tbody.innerHTML=slice.map(r=>{
+    const tgl=r.ttlTgl?new Date(r.ttlTgl).toLocaleDateString('id-ID'):'—';
+    const fEl=r.foto?`<img class="foto-thumb" src="${r.foto}" onerror="this.style.display='none';this.nextSibling.style.display='flex'">`:'';
+    const iEl=`<div class="foto-init" style="${r.foto?'display:none':''}">${r.nama[0]||'?'}</div>`;
+    const jkB=r.jk?`<span class="badge ${r.jk==='Laki-laki'?'b-lk':'b-pr'}">${r.jk==='Laki-laki'?'L':'P'}</span>`:'—';
+    const stB=r.status?`<span class="badge ${r.status==='Single'?'b-single':'b-nikah'}">${r.status}</span>`:'—';
+    return`<tr>
+      <td>${fEl}${iEl}</td>
+      <td style="font-weight:600">${r.nama}</td>
+      <td style="font-family:monospace;font-size:11px">${r.nik}</td>
+      <td>${r.ttlTempat?r.ttlTempat+',':''} ${tgl}</td>
+      <td>${jkB}</td><td>${stB}</td>
+      <td><span class="badge ${bc[r.sppg]||''}">${r.sppg.split(' ')[0]}</span></td>
+      <td><span class="badge b-div">${r.divisi}</span></td>
+      <td style="font-size:11px;color:var(--abu)">${(r.alamat||'').substring(0,40)}${(r.alamat||'').length>40?'...':''}</td>
+      <td><div class="act-btns">
+        <button class="ibtn" onclick="lihatDetail('${r.id}')" title="Detail">👁</button>
+        <button class="ibtn" onclick="bukaEdit('${r.id}')" title="Edit">✏️</button>
+        <button class="ibtn del" onclick="hapus('${r.id}')" title="Hapus">🗑</button>
+      </div></td>
+    </tr>`;
+  }).join('');
+  let h=`<span>${curPage}/${totalPages} hal.</span>`;
+  if(totalPages>1)for(let i=1;i<=totalPages;i++)h+=`<button class="pb${i===curPage?' active':''}" onclick="goPage(${i})">${i}</button>`;
+  document.getElementById('pager').innerHTML=totalPages>1?h:'';
+}
+function goPage(n){curPage=n;renderTabel();}
+
+function renderLaporan(){
+  document.getElementById('l-mayang').textContent=data.filter(x=>x.sppg==='Mayang Mangurai').length;
+  document.getElementById('l-kenali').textContent=data.filter(x=>x.sppg==='Kenali Besar').length;
+  document.getElementById('l-kebun').textContent=data.filter(x=>x.sppg==='Kebun Handil').length;
+  document.getElementById('l-total').textContent=data.length;
+  document.getElementById('l-lk').textContent=data.filter(x=>x.jk==='Laki-laki').length;
+  document.getElementById('l-pr').textContent=data.filter(x=>x.jk==='Perempuan').length;
+  document.getElementById('l-single').textContent=data.filter(x=>x.status==='Single').length;
+  document.getElementById('l-nikah').textContent=data.filter(x=>x.status==='Menikah').length;
+  document.getElementById('l-divisi').innerHTML=DIVISI.map(d=>`<div class="div-row"><span>${d}</span><span class="div-count">${data.filter(x=>x.divisi===d).length}</span></div>`).join('');
+  document.getElementById('l-per-sppg').innerHTML=`<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:4px">
+  ${SPPG_LIST.map(s=>`<div style="border:0.5px solid var(--border);border-radius:8px;overflow:hidden">
+    <div style="padding:7px 11px;font-weight:700;font-size:11px;background:var(--hijau3);color:var(--hijau4)">${s}</div>
+    ${DIVISI.map(d=>`<div class="div-row" style="padding:5px 11px"><span style="font-size:11px">${d}</span><span style="font-weight:700;font-size:12px;color:var(--hijau4)">${data.filter(x=>x.sppg===s&&x.divisi===d).length}</span></div>`).join('')}
+  </div>`).join('')}
+  </div>`;
+}
+
+function exportCSV(){
+  const f=getFiltered();
+  if(!f.length){toast('Tidak ada data!',false);return;}
+  const h='No,Nama,NIK,Tempat Lahir,Tgl Lahir,JK,Status,HP,Alamat,SPPG,Divisi,Link Drive\n';
+  const rows=f.map((r,i)=>`${i+1},"${r.nama}","${r.nik}","${r.ttlTempat||''}","${r.ttlTgl||''}","${r.jk||''}","${r.status||''}","${r.hp||''}","${r.alamat}","${r.sppg}","${r.divisi}","${r.gdrive||''}"`).join('\n');
+  const blob=new Blob([h+rows],{type:'text/csv;charset=utf-8'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='Relawan_SPPG_YHRA.csv';a.click();
+  toast('CSV berhasil diunduh ✓');
+}
+
+if(!data.length){
+  data=[
+    {id:'1',nama:'Siti Rahmawati',nik:'1506015510020001',ttlTempat:'Jambi',ttlTgl:'2002-10-15',jk:'Perempuan',status:'Single',hp:'0812-3456-7890',alamat:'Jl. Sungai Kambang No.12, RT 03/02, Kel. Mayang Mangurai',sppg:'Mayang Mangurai',divisi:'Persiapan',gdrive:'',foto:'',tambah:'2025-01-10T00:00:00'},
+    {id:'2',nama:'Ahmad Fauzi',nik:'1506011208850002',ttlTempat:'Muaro Jambi',ttlTgl:'1985-08-12',jk:'Laki-laki',status:'Menikah',hp:'0813-5678-1234',alamat:'Jl. Kenali Asam No.45, RT 01/03, Kel. Kenali Besar',sppg:'Kenali Besar',divisi:'Pengolahan',gdrive:'',foto:'',tambah:'2025-01-11T00:00:00'},
+    {id:'3',nama:'Nurul Hidayah',nik:'1506014507950003',ttlTempat:'Jambi',ttlTgl:'1995-07-05',jk:'Perempuan',status:'Menikah',hp:'0811-2233-4455',alamat:'Jl. Kebun Handil Blok B No.7',sppg:'Kebun Handil',divisi:'Pemorsian',gdrive:'',foto:'',tambah:'2025-01-12T00:00:00'},
+    {id:'4',nama:'Rizky Pratama',nik:'1506011503990004',ttlTempat:'Batanghari',ttlTgl:'1999-03-15',jk:'Laki-laki',status:'Single',hp:'0814-7788-9900',alamat:'Jl. Mayang No.22, RT 05/01',sppg:'Mayang Mangurai',divisi:'Asisten Lapangan 1',gdrive:'',foto:'',tambah:'2025-01-13T00:00:00'},
+    {id:'5',nama:'Dewi Lestari',nik:'1506012204900005',ttlTempat:'Tanjung Jabung',ttlTgl:'1990-04-22',jk:'Perempuan',status:'Menikah',hp:'0812-6677-8899',alamat:'Jl. Kenali Besar Permai No.3',sppg:'Kenali Besar',divisi:'Asisten Lapangan 2',gdrive:'',foto:'',tambah:'2025-01-14T00:00:00'},
+  ];
+  sv();
+}
+renderDash();renderTabel();
+</script>
